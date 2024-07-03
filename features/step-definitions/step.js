@@ -1,20 +1,20 @@
-import { When, Then, Given, Before, After } from '@cucumber/cucumber';
+import { When, Then, Given, Before, After, setDefaultTimeout } from '@cucumber/cucumber';
+import { By } from "selenium-webdriver"
 import { expect } from "chai"
 
-import { Builder, By } from "selenium-webdriver"
+import { initDriver, quitDriver } from '../supports/driverUtil.js';
 
-let driver = new Builder()
-  .forBrowser('chrome')
-  .build()
+setDefaultTimeout(60 * 1000)
 
 let sum = 0
+let driver
 
 Before(function() {
-  console.log("Before")
+  driver = initDriver()
 })
 
 After(function() {
-  console.log("After")
+  quitDriver(driver)
 })
 
 When('I add {int} and {int}', function(int, int2) {
