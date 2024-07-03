@@ -5,15 +5,17 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "cucumber-js"
+    "test": "cucumber-js -f @cucumber/pretty-formatter"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cucumber/cucumber": "^10.8.0"
+    "@cucumber/cucumber": "^10.8.0",
+    "selenium-webdriver": "^4.22.0"
   },
   "devDependencies": {
+    "@cucumber/pretty-formatter": "^1.0.1",
     "chai": "^5.1.1"
   }
 }
