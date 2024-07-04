@@ -1,12 +1,11 @@
-import { When, Then, Given, Before, After, setDefaultTimeout } from '@cucumber/cucumber';
+import { When, Then, Given, Before, After, setDefaultTimeout } from '@cucumber/cucumber'
 import { By } from "selenium-webdriver"
 import { expect } from "chai"
 
-import { initDriver, quitDriver } from '../supports/driverUtil.js';
+import { initDriver, quitDriver } from '../supports/driverUtil.js'
 
 setDefaultTimeout(60 * 1000)
 
-let sum = 0
 let driver
 
 Before(function() {
@@ -46,7 +45,7 @@ Given('I enter the name as {string}', async function(name) {
 })
 
 Given('I click on the register button', async function() {
-  const registerButton = await driver.findElement(By.css('button[type="submit"]'));
+  const registerButton = await driver.findElement(By.css('button[type="submit"]'))
   await registerButton.click();
   await driver.sleep(1000)
 })
