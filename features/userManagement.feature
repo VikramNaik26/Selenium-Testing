@@ -1,4 +1,4 @@
-Feature: Uset management
+Feature: User management
 As a new user
 I want to register for an account
 And also login using the registered credentials
@@ -20,3 +20,20 @@ So that I can access the SocialNexa
     And I enter registered password as "vikram"
     * I click on the login button
     Then I should redirect to Home page
+
+  Scenario: Unsuccessful user registration
+    Given I am on the registration page
+    When I enter the following details:
+      | username   | email   | password   | name   |
+      | <username> | <email> | <password> | <name> |
+    And I click on the register button
+    Then I should see an error message "<error_message>"
+    And I should remain on the registration page
+
+    Examples:
+      | username | email                  | password | name      | error_message        |
+      |          | testuser@gmail.com     | pass123  | Test User | Missing fields       |
+      | testuser |                        | pass123  | Test User | Missing fields       |
+      | testuser | testuser@gmail.com     |          | Test User | Missing fields       |
+      | testuser | testuser@gmail.com     | pass123  |           | Missing fields       |
+      | testuser | testuser123@gmail.com  | vikram   | Test User | user already exists  |

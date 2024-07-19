@@ -8,12 +8,12 @@ setDefaultTimeout(60 * 1000)
 
 let driver
 
-Before(function() {
-  driver = initDriver()
+Before(async function() {
+  driver = await initDriver()
 })
 
-After(function() {
-  quitDriver(driver)
+After(async function() {
+  await quitDriver(driver)
 })
 
 Given('Iam in login page', async function() {
@@ -38,7 +38,7 @@ Given('I click on the login button', async function() {
   await driver.sleep(1000)
 })
 
-Then('I should redirect to Home page',async function() {
+Then('I should redirect to Home page', async function() {
   const currentUrl = await driver.getCurrentUrl();
   expect(currentUrl).to.include('');
   await driver.sleep(1000)

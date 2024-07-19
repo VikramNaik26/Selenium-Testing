@@ -1,6 +1,6 @@
 import { When, Then, Given, Before, After, setDefaultTimeout } from '@cucumber/cucumber'
 import { By } from "selenium-webdriver"
-import { expect } from "chai"
+import { expect, assert } from "chai"
 
 import { initDriver, quitDriver } from '../supports/driverUtil.js'
 
@@ -8,12 +8,12 @@ setDefaultTimeout(60 * 1000)
 
 let driver
 
-Before(function() {
-  driver = initDriver()
+Before(async function() {
+  driver = await initDriver()
 })
 
-After(function() {
-  quitDriver(driver)
+After(async function() {
+  await quitDriver(driver)
 })
 
 Given('Iam in registration page', async function() {
@@ -56,3 +56,32 @@ Then('I should redirect to Login page', async function() {
   await driver.sleep(1000)
 })
 
+Given('I am on the registration page', async function() {
+  await driver.get("http://localhost:5173/register")
+})
+
+When('I enter the following details:', async function(dataTable) {
+  const data = dataTable.hashes()
+  for (const row of data) {
+    for (const [field, value] of Object.entries(row)) {
+      if (value !== '<' + field + '>') {
+        await driver.findElement(By.name(field)).sendKeys(value)
+        await driver.sleep(1000)
+      }
+    }
+  }
+})
+
+
+Then('I should see an error message {string}', async function(expectedErrorMessage) {
+  const errorElement = await driver.findElement(By.className('error-msg'))
+  const actualErrorMessage = await errorElement.getText()
+  assert.strictEqual(actualErrorMessage, expectedErrorMessage)
+  await driver.sleep(1000)
+});
+
+Then('I should remain on the registration page', async function() {
+  const currentUrl = await driver.getCurrentUrl();
+  expect(currentUrl).to.include('/register');
+  await driver.sleep(1000)
+})
