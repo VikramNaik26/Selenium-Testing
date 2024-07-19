@@ -72,13 +72,12 @@ When('I enter the following details:', async function(dataTable) {
   }
 })
 
-
-Then('I should see an error message {string}', async function(expectedErrorMessage) {
+Then('I should see a register error message {string}', async function(expectedErrorMessage) {
   const errorElement = await driver.findElement(By.className('error-msg'))
   const actualErrorMessage = await errorElement.getText()
   assert.strictEqual(actualErrorMessage, expectedErrorMessage)
   await driver.sleep(1000)
-});
+})
 
 Then('I should remain on the registration page', async function() {
   const currentUrl = await driver.getCurrentUrl();
