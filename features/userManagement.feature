@@ -21,6 +21,12 @@ So that I can access the SocialNexa
     * I click on the login button
     Then I should redirect to Home page
 
+  Scenario: Successful post creation
+    Given Iam in home page
+    When I enter the post content as "New post!!!"
+    And I click on the share button
+    Then I should see the new uploaded post with the content as "New post!!!"
+
   Scenario: Unsuccessful user registration
     Given I am on the registration page
     When I enter the following details:
