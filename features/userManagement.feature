@@ -28,7 +28,7 @@ So that I can access the SocialNexa
     Then I should see the new uploaded post with the content as "New post!!!"
 
   Scenario: Unsuccessful user registration
-    Given I am on the registration page
+    Given Iam in registration page
     When I enter the following details:
       | username   | email   | password   | name   |
       | <username> | <email> | <password> | <name> |
@@ -45,7 +45,7 @@ So that I can access the SocialNexa
       | testuser | testuser123@gmail.com  | vikram   | Test User | user already exists  |
 
    Scenario Outline: Unsuccessful user login
-    Given I am on the login page
+    Given Iam in login page
     When I enter the following credentials:
       | username   | password   |
       | <username> | <password> |

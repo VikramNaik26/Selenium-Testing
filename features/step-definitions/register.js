@@ -1,5 +1,5 @@
 import { When, Then, Given, Before, After, setDefaultTimeout } from '@cucumber/cucumber'
-import { By } from "selenium-webdriver"
+import { By, until } from "selenium-webdriver"
 import { expect, assert } from "chai"
 
 import { initDriver, quitDriver } from '../supports/driverUtil.js'
@@ -56,8 +56,32 @@ Then('I should redirect to Login page', async function() {
   await driver.sleep(1000)
 })
 
-Given('I am on the registration page', async function() {
-  await driver.get("http://localhost:5173/register")
+Given('Iam in login page', async function() {
+  await driver.get("http://localhost:5173/login")
+})
+
+When('I enter the registered username as {string}', async function(username) {
+  const usernameField = await driver.findElement(By.name('username'))
+  await usernameField.sendKeys(username)
+  await driver.sleep(1000)
+})
+
+When('I enter registered password as {string}', async function(password) {
+  const passwordField = await driver.findElement(By.name('password'))
+  await passwordField.sendKeys(password)
+  await driver.sleep(1000)
+})
+
+Given('I click on the login button', async function() {
+  const loginButton = await driver.findElement(By.css('button[type="submit"]'));
+  await loginButton.click();
+  await driver.sleep(1000)
+})
+
+Then('I should redirect to Home page', async function() {
+  const currentUrl = await driver.getCurrentUrl();
+  expect(currentUrl).to.include('');
+  await driver.sleep(1000)
 })
 
 When('I enter the following details:', async function(dataTable) {
@@ -83,4 +107,65 @@ Then('I should remain on the registration page', async function() {
   const currentUrl = await driver.getCurrentUrl();
   expect(currentUrl).to.include('/register');
   await driver.sleep(1000)
+})
+
+When('I enter the following credentials:', async function(dataTable) {
+  const data = dataTable.hashes()
+  for (const row of data) {
+    for (const [field, value] of Object.entries(row)) {
+      if (value !== '<' + field + '>') {
+        await driver.findElement(By.name(field)).sendKeys(value)
+        await driver.sleep(1000)
+      }
+    }
+  }
+})
+
+Then('I should see a login error message {string}', async function(expectedErrorMessage) {
+  const errorElement = await driver.findElement(By.className('error-msg'))
+  const actualErrorMessage = await errorElement.getText()
+  assert.strictEqual(actualErrorMessage, expectedErrorMessage)
+  await driver.sleep(1000)
+});
+
+Then('I should remain on the login page', async function() {
+  const currentUrl = await driver.getCurrentUrl();
+  expect(currentUrl).to.include('/login');
+  await driver.sleep(1000)
+})
+
+Given('Iam in home page', async function() {
+  await driver.get("http://localhost:5173")
+  await driver.sleep(1000)
+
+  const usernameField = await driver.findElement(By.name('username'))
+  await usernameField.sendKeys('user1')
+  await driver.sleep(1000)
+  const passwordField = await driver.findElement(By.name('password'))
+  await passwordField.sendKeys('user1')
+  await driver.sleep(1000)
+
+  const loginButton = await driver.findElement(By.css('button[type="submit"]'))
+  await loginButton.click();
+  await driver.sleep(1000)
+})
+
+When('I enter the post content as {string}', async function(desc) {
+  const inputElement = await driver.wait(until.elementLocated(By.id('post-desc')), 10000)
+  await inputElement.sendKeys(desc)
+  await driver.sleep(3000)
+})
+
+Given('I click on the share button', async function() {
+  const shareButton = await driver.wait(until.elementLocated(By.id('share-btn')), 10000)
+  await shareButton.click()
+  await driver.sleep(2000)
+})
+
+Then('I should see the new uploaded post with the content as {string}', async function(content) {
+  const postContents = await driver.wait(until.elementsLocated(By.id('post-content')), 10000)
+  const mostRecentPost = postContents[0]
+  const actualPostContent = await mostRecentPost.getText()
+  assert.strictEqual(actualPostContent, content)
+  await driver.sleep(2000)
 })
